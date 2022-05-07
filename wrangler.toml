@@ -1,0 +1,12 @@
+name = "loser-city-service"
+type = "webpack"
+
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = "loser.city"
+compatibility_date = "2022-05-06"
+
+kv_namespaces = [ 
+  { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
+]
