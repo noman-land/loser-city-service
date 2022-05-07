@@ -14,6 +14,5 @@ router
     .post('/sms', handleSms)
 
 addEventListener('fetch', event => {
-    console.log(event.request)
     event.respondWith(router.handle(event.request))
 })
