@@ -23,10 +23,16 @@ export const parseSms = str => {
     }
 }
 
-export const sendSms = async ({ body, to }) => {
+export const sendSms = async ({ body, mediaUrl, to }) => {
     const token = Buffer.from(
         `${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`
     ).toString('base64')
+
+    const maybeParams = mediaUrl
+        ? {
+              MediaUrl: mediaUrl,
+          }
+        : {}
 
     return fetch(
         `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
@@ -35,6 +41,7 @@ export const sendSms = async ({ body, to }) => {
                 Body: body,
                 MessagingServiceSid: TWILIO_MESSAGING_SERVICE_SID,
                 To: to,
+                ...maybeParams,
             }).toString(),
             headers: {
                 authorization: `Basic ${token}`,
