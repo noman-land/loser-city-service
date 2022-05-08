@@ -1,5 +1,5 @@
 export const parseSms = str => {
-    const { Body, From, MediaUrl0 } = str
+    const { Body, From, NumMedia, ...rest } = str
         .split('&')
         .flatMap(n => n.split('='))
         .reduce((accum, curr, i, list) => {
@@ -9,12 +9,16 @@ export const parseSms = str => {
             return accum
         }, {})
 
+    const mediaUrls = Array.from(
+        new Array(parseInt(NumMedia, 10))
+    ).map((_, i) => decodeURIComponent(rest[`MediaUrl${i}`]))
+
     return {
         body: decodeURIComponent(Body)
             .split('+')
             .join(' '),
         from: decodeURIComponent(From),
-        mediaUrl: decodeURIComponent(MediaUrl0),
+        mediaUrls,
     }
 }
 

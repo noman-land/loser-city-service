@@ -2,11 +2,11 @@ import { postSlackMessage } from '../utils/slackUtils'
 import { parseSms } from '../utils/smsUtils'
 
 export const handleSms = async req => {
-    const { body, from, mediaUrl } = parseSms(req.body)
+    const { body, from, mediaUrls } = parseSms(req.body)
     const threadId = await LOSERS.get(from)
 
     if (!threadId) {
-        return postSlackMessage({ body, from, mediaUrl }).then(
+        return postSlackMessage({ body, from, mediaUrls }).then(
             async response => {
                 const {
                     message: { ts },
@@ -18,5 +18,5 @@ export const handleSms = async req => {
         )
     }
 
-    return postSlackMessage({ body, from, mediaUrl, threadId })
+    return postSlackMessage({ body, from, mediaUrls, threadId })
 }
