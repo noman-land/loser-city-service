@@ -1,14 +1,27 @@
-const toBlocks = text => [
-    {
-        type: 'section',
-        text: {
-            type: 'mrkdwn',
-            text,
-        },
-    },
-]
+const toBlocks = ({ mediaUrl, text }) => {
+    const images = mediaUrl
+        ? [
+              {
+                  alt_text: text,
+                  image_url: mediaUrl,
+                  type: 'image',
+              },
+          ]
+        : []
 
-export const postSlackMessage = async ({ body, from, threadId }) => {
+    return [
+        {
+            type: 'section',
+            text: {
+                type: 'mrkdwn',
+                text,
+            },
+        },
+        ...images,
+    ]
+}
+
+export const postSlackMessage = async ({ body, from, mediaUrl, threadId }) => {
     const threadProps = threadId
         ? {
               thread_ts: threadId,
@@ -19,7 +32,7 @@ export const postSlackMessage = async ({ body, from, threadId }) => {
 
     return fetch('https://slack.com/api/chat.postMessage', {
         body: JSON.stringify({
-            blocks: toBlocks(body),
+            blocks: toBlocks({ text: body, mediaUrl }),
             channel: SLACK_CHANNEL_ID,
             link_names: false,
             username: `${from}@loser.city`,

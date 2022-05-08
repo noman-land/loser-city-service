@@ -5,10 +5,8 @@ export const handleSms = async req => {
     const { body, from, mediaUrl } = parseSms(req.body)
     const threadId = await LOSERS.get(from)
 
-    const bodyWithMedia = mediaUrl ? `${body} ${mediaUrl}` : body
-
     if (!threadId) {
-        return postSlackMessage({ body: bodyWithMedia, from }).then(
+        return postSlackMessage({ body, from, mediaUrl }).then(
             async response => {
                 const {
                     message: { ts },
@@ -20,5 +18,5 @@ export const handleSms = async req => {
         )
     }
 
-    return postSlackMessage({ body: bodyWithMedia, from, threadId })
+    return postSlackMessage({ body, from, mediaUrl, threadId })
 }
