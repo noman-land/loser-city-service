@@ -1,5 +1,5 @@
 export const parseSms = str => {
-    const { Body, From } = str
+    const { Body, From, MediaUrl0 } = str
         .split('&')
         .flatMap(n => n.split('='))
         .reduce((accum, curr, i, list) => {
@@ -14,6 +14,7 @@ export const parseSms = str => {
             .split('+')
             .join(' '),
         from: decodeURIComponent(From),
+        mediaUrl: decodeURIComponent(MediaUrl0),
     }
 }
 
