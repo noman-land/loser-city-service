@@ -9,16 +9,17 @@ export const parseSms = str => {
             return accum
         }, {})
 
-    const mediaUrls = Array.from(
-        new Array(parseInt(NumMedia, 10))
-    ).map((_, i) => decodeURIComponent(rest[`MediaUrl${i}`]))
+    const media = Array.from(new Array(parseInt(NumMedia, 10))).map((_, i) => ({
+        mediaType: decodeURIComponent(rest[`MediaContentType${i}`]),
+        url: decodeURIComponent(rest[`MediaUrl${i}`]),
+    }))
 
     return {
         body: decodeURIComponent(Body)
             .split('+')
             .join(' '),
         from: decodeURIComponent(From),
-        mediaUrls,
+        media,
     }
 }
 
