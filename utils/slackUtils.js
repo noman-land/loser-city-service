@@ -21,7 +21,6 @@ export const postSlackMessage = async ({ body, from, threadId }) => {
         body: JSON.stringify({
             blocks: toBlocks(body),
             channel: SLACK_CHANNEL_ID,
-            icon_emoji: ':thumbsdown:',
             link_names: false,
             username: `${from}@loser.city`,
             unfurl_links: false,
