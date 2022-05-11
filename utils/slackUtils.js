@@ -34,7 +34,7 @@ const createMediaObject = ({ mediaType, url }, i) => {
     return null
 }
 
-const toBlocks = ({ media, text }) => {
+export const toBlocks = ({ media, text }) => {
     const mediaObjects = media
         ? media.map(createMediaObject).filter(n => n)
         : []
@@ -49,30 +49,4 @@ const toBlocks = ({ media, text }) => {
         },
         ...mediaObjects,
     ]
-}
-
-export const postSlackMessage = async ({ body, from, media, threadId }) => {
-    const threadProps = threadId
-        ? {
-              thread_ts: threadId,
-              // TODO: Send to channel
-              // reply_broadcast: true,
-          }
-        : {}
-
-    return fetch('https://slack.com/api/chat.postMessage', {
-        body: JSON.stringify({
-            blocks: toBlocks({ text: body, media }),
-            channel: SLACK_CHANNEL_ID,
-            link_names: false,
-            username: `${from}@loser.city`,
-            unfurl_links: false,
-            ...threadProps,
-        }),
-        headers: {
-            authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-            'content-type': 'application/json; charset=utf-8',
-        },
-        method: 'POST',
-    })
 }

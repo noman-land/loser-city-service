@@ -1,15 +1,25 @@
-import { sendSms } from '../utils/smsUtils'
+import { sendSms } from '../api/twilioApi'
 
-export const handleSlack = async req => {
+const ALLOWED_SUBTYPES = ['file_share']
+
+export const handleSlack = async request => {
     const {
-        files: [{ thumb_480 }] = [{}],
+        files: [{ url_private_download }] = [{}],
         subtype,
         text,
         thread_ts,
-    } = req.body.event
+    } = request.body.event
     const phoneNumber = await LOSERS.get(thread_ts)
 
-    if (!subtype && thread_ts && phoneNumber) {
-        return sendSms({ body: text, mediaUrl: thumb_480, to: phoneNumber })
+    if (
+        (!subtype || ALLOWED_SUBTYPES.includes(subtype)) &&
+        thread_ts &&
+        phoneNumber
+    ) {
+        return sendSms({
+            body: text,
+            mediaUrl: url_private_download,
+            to: phoneNumber,
+        })
     }
 }

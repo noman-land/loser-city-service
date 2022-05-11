@@ -11,6 +11,7 @@
     "author": "Noman <noman@noman.land>",
     "license": "ISC",
     "devDependencies": {
+        "eslint": "^8.15.0",
         "prettier": "^1.17.0"
     },
     "dependencies": {
