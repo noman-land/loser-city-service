@@ -1,12 +1,20 @@
-name = "loser-city-service"
+name = "loser-city-dev"
 type = "webpack"
-
-account_id = ""
-workers_dev = true
-route = ""
-zone_id = ""
 compatibility_date = "2022-05-06"
 
+account_id = ""
+zone_id = ""
+workers_dev = true
+vars = { ENVIRONMENT = "dev" }
+
 kv_namespaces = [ 
-  { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
+  { binding = "LOSERS", id = "4530309591d747348986201a4b810b74" }
+]
+
+[env.prod]
+name = "loser-city"
+vars = { ENVIRONMENT = "prod" }
+route = "api.loser.city/fun/v1/*"
+kv_namespaces = [ 
+  { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498" }
 ]
