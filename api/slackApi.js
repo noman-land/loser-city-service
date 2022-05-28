@@ -36,7 +36,7 @@ export const postSlackMessage = async ({ body, from, media }) => {
 
     if (threadTs) {
         threadProps['thread_ts'] = threadTs
-        threadProps['reply_broadcast'] = true
+        // threadProps['reply_broadcast'] = true
     }
 
     return slackPost('https://slack.com/api/chat.postMessage', {
