@@ -1,12 +1,15 @@
-name = "loser-city-service"
-type = "webpack"
-
-account_id = ""
+name = "loser-city"
+compatibility_date = "2022-05-14"
+main = "index.js"
 workers_dev = true
-route = ""
-zone_id = ""
-compatibility_date = "2022-05-06"
+route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
+kv_namespaces = [
+  { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
+]
 
-kv_namespaces = [ 
+[env.prod]
+name = "loser-city-prod"
+route = { pattern = "https://api.loser.city/fun/v1/*", zone_name = "loser.city" }
+kv_namespaces = [
   { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
 ]

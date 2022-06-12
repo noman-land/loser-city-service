@@ -1,15 +1,17 @@
-import Router from '@tsndr/cloudflare-worker-router'
+import { Router } from 'itty-router'
 
 import { handleSlack } from './handlers/slack'
 import { handleSms } from './handlers/sms'
 
-const router = new Router()
+const router = new Router({
+    base: '/fun/v1',
+})
 
 router
     .cors()
-    .get('', (_, res) => (res.body = 'OK'))
-    .get('/slack', (_, res) => (res.body = 'slack'))
-    .get('/sms', (_, res) => (res.body = 'sms'))
+    .get('', () => new Response('OK'))
+    .get('/slack', () => new Response('Slack OK'))
+    .get('/sms', () => new Response('SMS OK'))
     .post('/slack', handleSlack)
     .post('/sms', handleSms)
 
