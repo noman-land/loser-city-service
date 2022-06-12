@@ -1,5 +1,5 @@
-name = "loser-city"
-compatibility_date = "2022-05-14"
+name = "loser-city-qa"
+compatibility_date = "2022-06-12"
 main = "index.js"
 workers_dev = true
 route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
