@@ -1,6 +1,7 @@
 [env.qa]
 name = "loser-city-qa"
 compatibility_date = "2022-06-12"
+account_id = "2d88ecd847f9997d7c5525f48bb286fd"
 main = "index.js"
 workers_dev = true
 node_compat = true
