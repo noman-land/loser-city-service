@@ -3,7 +3,7 @@ import { sendSms } from '../api/twilioApi'
 
 const ALLOWED_SUBTYPES = ['file_share']
 
-export const handleSlack = async request => {
+export const handleSlack = async req => {
     const {
         event: {
             files: [{ url_private_download }] = [{}],
