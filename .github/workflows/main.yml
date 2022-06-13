@@ -5,8 +5,9 @@ on:
     inputs:
       environment:
         description: 'Choose an environment to deploy to: <qa|prod>'
+        type: environment
         required: true
-        default: 'qa'
+        default: 'prod'
 
   push:
     branches:
