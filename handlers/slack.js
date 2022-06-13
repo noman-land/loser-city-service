@@ -1,18 +1,20 @@
 import { slackGet } from '../api/slackApi'
 import { sendSms } from '../api/twilioApi'
 
-export const handleSlack = async req => {
+const ALLOWED_SUBTYPES = ['file_share']
+
+export const handleSlack = async request => {
     const {
         event: {
-            files: [{ thumb_480 }] = [{}],
-            subtype, text, thread_ts
+            files: [{ url_private_download }] = [{}],
+            subtype,
+            text,
+            thread_ts,
         },
     } = await req.json()
 
 
     const phoneNumber = await LOSERS.get(thread_ts)
-
-    console.log(request.body.event)
 
     // slackGet({ contentType: `image/${fileType}`, url: thumb_480 })
     // .then(response =>
@@ -27,7 +29,7 @@ export const handleSlack = async req => {
     ) {
         return sendSms({
             body: text,
-            // mediaUrl: thumb_480,
+            mediaUrl: url_private_download,
             to: phoneNumber,
         })
     }
