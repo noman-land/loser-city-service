@@ -23,4 +23,5 @@ jobs:
               uses: cloudflare/wrangler-action@2.0.0
               with:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
-                  command: npm install && publish --env=qa ./index.js
+                  preCommands: npm install
+                  command: publish --env=qa ./index.js
