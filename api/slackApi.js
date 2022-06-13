@@ -2,7 +2,7 @@ import { toBlocks } from '../utils/slackUtils'
 
 const ONE_HOUR_IN_MS = 1000 * 60 * 60
 
-const slackFetch = async ({
+export const slackFetch = async ({
     body,
     contentType = 'application/json; charset=utf-8',
     method = 'GET',
@@ -16,9 +16,6 @@ const slackFetch = async ({
         },
         method,
     })
-
-export const slackGet = async ({ contentType, url }) =>
-    slackFetch({ contentType, url })
 
 const slackPost = async (url, body = {}) =>
     slackFetch({
