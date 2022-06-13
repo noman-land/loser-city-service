@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
         inputs:
             environment:
-                description: 'Choose an environment to deploy to: <qa|prod>'
+                description: 'Choose an environment to deploy to:'
                 type: environment
                 required: true
                 default: 'prod'
@@ -23,3 +23,4 @@ jobs:
               uses: cloudflare/wrangler-action@2.0.0
               with:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
+                  command: publish --env=qa
