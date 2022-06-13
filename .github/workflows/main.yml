@@ -7,7 +7,7 @@ on:
                 description: 'Choose an environment to deploy to:'
                 type: environment
                 required: true
-                default: 'prod'
+                default: 'qa'
 
     push:
         branches:
@@ -24,4 +24,4 @@ jobs:
               with:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
                   preCommands: npm install
-                  command: whoami && publish --env=qa ./index.js
+                  command: publish --env qa index.js
