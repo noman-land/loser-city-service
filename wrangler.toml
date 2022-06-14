@@ -1,11 +1,10 @@
 compatibility_date = "2022-06-12"
 account_id = "2d88ecd847f9997d7c5525f48bb286fd"
 node_compat = true
+main = "index.js"
 
 [env.qa]
 name = "loser-city-qa"
-main = "index.js"
-workers_dev = true
 route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
 kv_namespaces = [
   { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
