@@ -1,3 +1,4 @@
+import { SUFFIX } from '../constants'
 import { sendSms } from '../utils/smsUtils'
 
 export const handleSlack = async req => {
@@ -34,7 +35,7 @@ export const handleSlack = async req => {
 
     const isBotMessage =
         previous_message.subtype === 'bot_message' &&
-        previous_message.username.endsWith('@loser.city')
+        previous_message.username.endsWith(SUFFIX)
 
     const isThreadDeleted =
         subtype === 'message_changed' &&

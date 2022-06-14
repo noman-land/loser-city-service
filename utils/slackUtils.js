@@ -1,3 +1,5 @@
+import { SUFFIX } from '../constants'
+
 const createMediaObject = ({ mediaType, url }, i) => {
     const [type] = mediaType.split('/')
     const defaultProps = {
@@ -65,7 +67,7 @@ export const postSlackMessage = async ({ body, from, media, threadId }) => {
             blocks: toBlocks({ text: body, media }),
             channel: SLACK_CHANNEL_ID,
             link_names: false,
-            username: `${from}@loser.city`,
+            username: `${from}${SUFFIX}`,
             unfurl_links: false,
             ...threadProps,
         }),
