@@ -24,4 +24,4 @@ jobs:
               with:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
                   preCommands: npm install
-                  command: publish --env qa index.js
+                  command: publish --env ${{ github.event.inputs.environment || 'qa'}} index.js
