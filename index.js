@@ -8,8 +8,6 @@ const router = new Router({
     base: '/fun/v1',
 })
 
-router.cors()
-
 router
     .cors()
     .get('', () => new Response('OK'))

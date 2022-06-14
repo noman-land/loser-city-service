@@ -31,7 +31,7 @@ export const handleSlack = async req => {
 
     const phoneNumber = await LOSERS.get(thread_ts)
 
-    // slackFetch({ contentType: `image/${fileType}`, url: thumb_480 })
+    // slackFetch({ contentType: `image/${fileType}`, url: url_private_download })
     // .then(response =>
     // console.log('response', Buffer.from(response).toString())
     // )

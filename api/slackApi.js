@@ -34,7 +34,7 @@ const slackPost = async (url, body = {}) =>
         method: 'POST',
     })
 
-export const postSlackMessage = async ({ body, from, media, threadTs }) => {
+export const postSlackMessage = async ({ body, from, media }) => {
     const threadProps = {}
     const {
         value: threadTs,
@@ -54,11 +54,11 @@ export const postSlackMessage = async ({ body, from, media, threadTs }) => {
         username: `${from}${SUFFIX}`,
         ...threadProps,
     }).then(async response => {
-        const { thread_ts } = response.body.event
-        if (!threadTs) {
-            await LOSERS.put(thread_ts, from)
+        const { event } = response.body
+        if (!event.threadTs) {
+            await LOSERS.put(event.thread_ts, from)
         }
-        await LOSERS.put(from, thread_ts, {
+        await LOSERS.put(from, event.thread_ts, {
             lastSeen: Date.now(),
         })
     })
