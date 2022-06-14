@@ -1,7 +1,7 @@
 const ALLOWED_SUBTYPES = ['file_share']
 
 import { SUFFIX } from '../constants'
-import { sendSms } from '../utils/smsUtils'
+import { sendSms } from '../api/twilioApi'
 
 export const handleSlack = async req => {
     const {
