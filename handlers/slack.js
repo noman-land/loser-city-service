@@ -1,9 +1,12 @@
+const ALLOWED_SUBTYPES = ['file_share']
+
 import { SUFFIX } from '../constants'
-import { sendSms } from '../utils/smsUtils'
+import { sendSms } from '../api/twilioApi'
 
 export const handleSlack = async req => {
     const {
         event: {
+            files: [{ url_private_download }] = [{}],
             message = {},
             previous_message = {},
             subtype,
@@ -28,9 +31,22 @@ export const handleSlack = async req => {
 
     const phoneNumber = await LOSERS.get(thread_ts)
 
-    // Thread reply by a Slack user
-    if (!subtype && thread_ts && phoneNumber) {
-        return sendSms({ body: text, to: phoneNumber })
+    // slackFetch({ contentType: `image/${fileType}`, url: url_private_download })
+    // .then(response =>
+    // console.log('response', Buffer.from(response).toString())
+    // )
+    // .catch(error => console.log(error.message))
+
+    if (
+        (!subtype || ALLOWED_SUBTYPES.includes(subtype)) &&
+        thread_ts &&
+        phoneNumber
+    ) {
+        return sendSms({
+            body: text,
+            mediaUrl: url_private_download,
+            to: phoneNumber,
+        })
     }
 
     const isBotMessage =

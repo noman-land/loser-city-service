@@ -1,4 +1,4 @@
-import { postSlackMessage } from '../utils/slackUtils'
+import { postSlackMessage } from '../api/slackApi'
 import { parseSms } from '../utils/smsUtils'
 
 export const handleSms = async req => {
