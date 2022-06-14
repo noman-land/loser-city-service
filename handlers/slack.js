@@ -4,7 +4,7 @@ export const handleSlack = async req => {
     const {
         event: {
             message = {},
-            previous_message: {},
+            previous_message = {},
             subtype,
             text,
             thread_ts,
