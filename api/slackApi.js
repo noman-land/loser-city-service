@@ -34,7 +34,7 @@ const slackPost = async (url, body = {}) =>
         method: 'POST',
     })
 
-export const postSlackMessage = async ({ body, from, media }) => {
+export const postSlackMessage = async ({ body, from, media, threadTs }) => {
     const threadProps = {}
     const {
         value: threadTs,

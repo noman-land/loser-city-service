@@ -53,28 +53,28 @@ export const toBlocks = ({ media, text }) => {
     ]
 }
 
-export const postSlackMessage = async ({ body, from, media, threadId }) => {
-    const threadProps = threadId
-        ? {
-              thread_ts: threadId,
-              // TODO: Send to channel
-              // reply_broadcast: true,
-          }
-        : {}
+// export const postSlackMessage = async ({ body, from, media, threadId }) => {
+//     const threadProps = threadId
+//         ? {
+//               thread_ts: threadId,
+//               // TODO: Send to channel
+//               // reply_broadcast: true,
+//           }
+//         : {}
 
-    return fetch('https://slack.com/api/chat.postMessage', {
-        body: JSON.stringify({
-            blocks: toBlocks({ text: body, media }),
-            channel: SLACK_CHANNEL_ID,
-            link_names: false,
-            username: `${from}${SUFFIX}`,
-            unfurl_links: false,
-            ...threadProps,
-        }),
-        headers: {
-            authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-            'content-type': 'application/json; charset=utf-8',
-        },
-        method: 'POST',
-    })
-}
+//     return fetch('https://slack.com/api/chat.postMessage', {
+//         body: JSON.stringify({
+//             blocks: toBlocks({ text: body, media }),
+//             channel: SLACK_CHANNEL_ID,
+//             link_names: false,
+//             username: `${from}${SUFFIX}`,
+//             unfurl_links: false,
+//             ...threadProps,
+//         }),
+//         headers: {
+//             authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+//             'content-type': 'application/json; charset=utf-8',
+//         },
+//         method: 'POST',
+//     })
+// }
