@@ -14,6 +14,7 @@ kv_namespaces = [
 
 [env.prod]
 name = "loser-city"
+account_id = "2d88ecd847f9997d7c5525f48bb286fd"
 node_compat = true
 route = { pattern = "https://api.loser.city/fun/v1/*", zone_name = "loser.city" }
 kv_namespaces = [
