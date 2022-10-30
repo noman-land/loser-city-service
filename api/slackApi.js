@@ -42,11 +42,8 @@ export const postSlackMessage = async ({ body, from, media }) => {
   } = await LOSERS.getWithMetadata(from)
 
   if (threadTs) {
-    threadProps.thread_ts = threadTs
-    if (Date.now() - lastSeen > FIVE_MINUTES_IN_MS) {
-      // broadcast to the whole channel
-      threadProps.reply_broadcast = true
-    }
+    threadProps.thread_ts = threadTs;
+    threadProps.reply_broadcast = true;
   }
 
   return slackPost('https://slack.com/api/chat.postMessage', {
@@ -55,6 +52,7 @@ export const postSlackMessage = async ({ body, from, media }) => {
     ...threadProps,
   }).then(async response => {
     const { event } = response.body
+    // event.threadTs vs event.thread_ts? seems wrong
     if (!event.threadTs) {
       await LOSERS.put(event.thread_ts, from)
     }
