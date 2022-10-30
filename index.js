@@ -1,12 +1,12 @@
-import { Router } from 'itty-router'
+import { Router } from 'itty-router';
 
-import { handleProxy } from './handlers/proxy'
-import { handleSlack } from './handlers/slack'
-import { handleSms } from './handlers/sms'
+import { handleProxy } from './handlers/proxy';
+import { handleSlack } from './handlers/slack';
+import { handleSms } from './handlers/sms';
 
 const router = new Router({
   base: '/fun/v1',
-})
+});
 
 router
   .cors()
@@ -15,8 +15,8 @@ router
   .get('/slack', () => new Response('Slack OK'))
   .get('/sms', () => new Response('SMS OK'))
   .post('/slack', handleSlack)
-  .post('/sms', handleSms)
+  .post('/sms', handleSms);
 
 addEventListener('fetch', event => {
-  event.respondWith(router.handle(event.request))
-})
+  event.respondWith(router.handle(event.request));
+});

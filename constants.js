@@ -1,1 +1,1 @@
-export const SUFFIX = '@loser.city'
+export const SUFFIX = '@loser.city';

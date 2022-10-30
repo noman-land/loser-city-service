@@ -1,7 +1,7 @@
-import { SUFFIX } from '../constants'
-import { toBlocks } from '../utils/slackUtils'
+import { SUFFIX } from '../constants';
+import { toBlocks } from '../utils/slackUtils';
 
-const FIVE_MINUTES_IN_MS = 1000 * 60 * 5
+const FIVE_MINUTES_IN_MS = 1000 * 60 * 5;
 
 export const slackFetch = async ({
   body,
@@ -16,7 +16,7 @@ export const slackFetch = async ({
       'content-type': contentType,
     },
     method,
-  })
+  });
 
 const slackPost = async (url, body = {}) =>
   slackFetch({
@@ -32,14 +32,14 @@ const slackPost = async (url, body = {}) =>
       'content-type': 'application/json; charset=utf-8',
     },
     method: 'POST',
-  })
+  });
 
 export const postSlackMessage = async ({ body, from, media }) => {
-  const threadProps = {}
+  const threadProps = {};
   const {
     value: threadTs,
     metadata: { lastSeen },
-  } = await LOSERS.getWithMetadata(from)
+  } = await LOSERS.getWithMetadata(from);
 
   if (threadTs) {
     threadProps.thread_ts = threadTs;
@@ -51,13 +51,10 @@ export const postSlackMessage = async ({ body, from, media }) => {
     username: `${from}${SUFFIX}`,
     ...threadProps,
   }).then(async response => {
-    const { event } = response.body
+    const { event } = response.body;
     // event.threadTs vs event.thread_ts? seems wrong
     if (!event.threadTs) {
-      await LOSERS.put(event.thread_ts, from)
+      await LOSERS.put(event.thread_ts, from);
     }
-    await LOSERS.put(from, event.thread_ts, {
-      lastSeen: Date.now(),
-    })
-  })
-}
+  });
+};

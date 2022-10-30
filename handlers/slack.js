@@ -1,7 +1,7 @@
-const ALLOWED_SUBTYPES = ['file_share']
+const ALLOWED_SUBTYPES = ['file_share'];
 
-import { SUFFIX } from '../constants'
-import { sendSms } from '../api/twilioApi'
+import { SUFFIX } from '../constants';
+import { sendSms } from '../api/twilioApi';
 
 export const handleSlack = async req => {
   const {
@@ -15,7 +15,7 @@ export const handleSlack = async req => {
       ...eventRest
     },
     ...requestRest
-  } = await req.json()
+  } = await req.json();
 
   console.log({
     ...requestRest,
@@ -27,9 +27,9 @@ export const handleSlack = async req => {
       thread_ts,
       ...eventRest,
     },
-  })
+  });
 
-  const phoneNumber = await LOSERS.get(thread_ts)
+  const phoneNumber = await LOSERS.get(thread_ts);
 
   // slackFetch({ contentType: `image/${fileType}`, url: url_private_download })
   // .then(response =>
@@ -46,37 +46,37 @@ export const handleSlack = async req => {
       body: text,
       mediaUrl: url_private_download,
       to: phoneNumber,
-    })
+    });
   }
 
   const isBotMessage =
     previous_message.subtype === 'bot_message' &&
-    previous_message.username.endsWith(SUFFIX)
+    previous_message.username.endsWith(SUFFIX);
 
   const isThreadDeleted =
     subtype === 'message_changed' &&
     message.subtype === 'tombstone' &&
-    previous_message.thread_ts
+    previous_message.thread_ts;
 
   const isNonThreadDeleted =
-    subtype === 'message_deleted' && !previous_message.thread_ts
+    subtype === 'message_deleted' && !previous_message.thread_ts;
 
   // Parent thread being deleted
   if (isBotMessage && (isThreadDeleted || isNonThreadDeleted)) {
-    const phoneNumber = await LOSERS.get(previous_message.ts)
+    const phoneNumber = await LOSERS.get(previous_message.ts);
 
     await Promise.all([
       LOSERS.delete(phoneNumber),
       LOSERS.delete(previous_message.ts),
-    ])
+    ]);
 
-    return new Response({ status: 200 })
+    return new Response({ status: 200 });
   }
 
-  return new Response({ status: 204 })
-}
+  return new Response({ status: 204 });
+};
 
 export const handleSlackChallenge = async req => {
-  const { challenge } = await req.json()
-  return new Response(challenge)
-}
+  const { challenge } = await req.json();
+  return new Response(challenge);
+};
