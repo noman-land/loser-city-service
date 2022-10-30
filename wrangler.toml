@@ -10,7 +10,9 @@ workers_dev = false
   kv_namespaces = [
     { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
   ]
-  r2_buckets = [{ binding = 'R2', bucket_name = 'loser-city-qa' }]
+  r2_buckets = [
+    { binding = "R2", bucket_name = "loser-city-qa", preview_bucket_name = "loser-city-local" }
+  ]
   vars = [{ SLACK_CHANNEL_ID = "C03F6AG3H7E" }]
 
 [env.prod]
@@ -19,5 +21,7 @@ workers_dev = false
   kv_namespaces = [
     { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
   ]
-  r2_buckets = [{ binding = 'R2', bucket_name = 'loser-city' }]
+  r2_buckets = [
+    { binding = "R2", bucket_name = "loser-city", preview_bucket_name = "loser-city-local" }
+  ]
   vars = [{ SLACK_CHANNEL_ID = "C03E12DJK0F" }]
