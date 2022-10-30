@@ -26,8 +26,12 @@ const textALoserModalPayload = {
       },
       label: {
         type: 'plain_text',
-        text: 'What phone number would you like to text? (ex: +13015551234)',
+        text: 'What phone number would you like to text?',
         emoji: true,
+      },
+      hint: {
+        type: 'plain_text',
+        text: 'Example: +13015551234',
       },
     },
     {
