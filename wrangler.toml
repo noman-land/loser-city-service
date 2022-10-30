@@ -5,19 +5,19 @@ node_compat = true
 workers_dev = false
 
 [env.qa]
-name = "loser-city-qa"
-route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
-kv_namespaces = [
-  { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
-]
+  name = "loser-city-qa"
+  route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
+  kv_namespaces = [
+    { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
+  ]
 [env.qa.vars]
   SLACK_CHANNEL_ID = "C03F6AG3H7E"
 
 [env.prod]
-name = "loser-city"
-route = { pattern = "https://api.loser.city/fun/v1/*", zone_name = "loser.city" }
-kv_namespaces = [
-  { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
-]
+  name = "loser-city"
+  route = { pattern = "https://api.loser.city/fun/v1/*", zone_name = "loser.city" }
+  kv_namespaces = [
+    { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
+  ]
 [env.prod.vars]
   SLACK_CHANNEL_ID = "C03E12DJK0F"
