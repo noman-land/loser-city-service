@@ -4,9 +4,7 @@ import { handleProxy } from './handlers/proxy';
 import { handleSlack } from './handlers/slack';
 import { handleSms } from './handlers/sms';
 
-const router = new Router({
-  base: '/fun/v1',
-});
+const router = new Router({ base: '/fun/v1' });
 
 router
   .cors()
