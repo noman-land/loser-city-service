@@ -1,5 +1,51 @@
 import { SUFFIX } from '../constants';
 
+const textALoserModalPayload = {
+  type: 'modal',
+  title: {
+    type: 'plain_text',
+    text: 'Text a loser',
+    emoji: true,
+  },
+  submit: {
+    type: 'plain_text',
+    text: 'Send text',
+    emoji: true,
+  },
+  close: {
+    type: 'plain_text',
+    text: 'Cancel',
+    emoji: true,
+  },
+  blocks: [
+    {
+      type: 'input',
+      element: {
+        type: 'plain_text_input',
+        action_id: 'phone-number-action',
+      },
+      label: {
+        type: 'plain_text',
+        text: 'What phone number would you like to text? (ex: +13015551234)',
+        emoji: true,
+      },
+    },
+    {
+      type: 'input',
+      element: {
+        type: 'plain_text_input',
+        multiline: true,
+        action_id: 'message-action',
+      },
+      label: {
+        type: 'plain_text',
+        text: 'Message',
+        emoji: true,
+      },
+    },
+  ],
+};
+
 const createMediaObject = ({ mediaType, url }, i) => {
   const [type] = mediaType.split('/');
   const defaultProps = {
