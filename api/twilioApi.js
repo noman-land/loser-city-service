@@ -4,7 +4,7 @@ const token = Buffer.from(
   `${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`
 ).toString('base64');
 
-const twilioSms = body =>
+const twilioSms = (body) =>
   fetch(TWILIO_URL, {
     body: new URLSearchParams({
       ...body,
@@ -23,6 +23,8 @@ export const sendSms = async ({ body, mediaUrl, to }) => {
         MediaUrl: encodeURIComponent(mediaUrl),
       }
     : {};
+
+  console.log('mediaUrl', mediaUrl);
 
   return twilioSms({
     Body: body,

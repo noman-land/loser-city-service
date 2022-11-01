@@ -1,13 +1,13 @@
 import { postSlackMessage } from '../api/slackApi';
 import { parseSms } from '../utils/smsUtils';
 
-export const handleSms = async req => {
+export const handleSms = async (req) => {
   const text = await req.text();
   const { body, from, media } = parseSms(text);
-  const threadId = await LOSERS.get(from);
+  const threadTs = await LOSERS.get(from);
 
-  if (!threadId) {
-    return postSlackMessage({ body, from, media }).then(async response => {
+  if (!threadTs) {
+    return postSlackMessage({ body, from, media }).then(async (response) => {
       const {
         message: { ts },
       } = await response.json();
@@ -17,5 +17,5 @@ export const handleSms = async req => {
     });
   }
 
-  return postSlackMessage({ body, from, media, threadId });
+  return postSlackMessage({ body, from, media, threadTs });
 };

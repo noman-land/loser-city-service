@@ -3,7 +3,7 @@ const ALLOWED_SUBTYPES = ['file_share'];
 import { SUFFIX } from '../constants';
 import { sendSms } from '../api/twilioApi';
 
-export const handleSlack = async req => {
+export const handleSlack = async (req) => {
   const {
     event: {
       files: [{ url_private_download }] = [{}],
@@ -17,17 +17,17 @@ export const handleSlack = async req => {
     ...requestRest
   } = await req.json();
 
-  console.log({
-    ...requestRest,
-    event: {
-      message,
-      previous_message,
-      subtype,
-      text,
-      thread_ts,
-      ...eventRest,
-    },
-  });
+  // console.log({
+  //   ...requestRest,
+  //   event: {
+  //     message,
+  //     previous_message,
+  //     subtype,
+  //     text,
+  //     thread_ts,
+  //     ...eventRest,
+  //   },
+  // });
 
   const phoneNumber = await LOSERS.get(thread_ts);
 
@@ -76,7 +76,7 @@ export const handleSlack = async req => {
   return new Response({ status: 204 });
 };
 
-export const handleSlackChallenge = async req => {
+export const handleSlackChallenge = async (req) => {
   const { challenge } = await req.json();
   return new Response(challenge);
 };

@@ -12,7 +12,8 @@ workers_dev = false
   r2_buckets = [
     { binding = "R2", bucket_name = "loser-city-qa", preview_bucket_name = "loser-city-local" }
   ]
-  vars = [{ SLACK_CHANNEL_ID = "C03F6AG3H7E" }]
+[env.qa.vars]
+  SLACK_CHANNEL_ID = "C03F6AG3H7E"
 
 [env.prod]
   name = "loser-city"
@@ -23,4 +24,5 @@ workers_dev = false
   r2_buckets = [
     { binding = "R2", bucket_name = "loser-city", preview_bucket_name = "loser-city-local" }
   ]
-  vars = [{ SLACK_CHANNEL_ID = "C03E12DJK0F" }]
+[env.prod.vars]
+  SLACK_CHANNEL_ID = "C03E12DJK0F"

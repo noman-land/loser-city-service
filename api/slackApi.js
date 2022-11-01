@@ -34,12 +34,8 @@ const slackPost = async (url, body = {}) =>
     method: 'POST',
   });
 
-export const postSlackMessage = async ({ body, from, media }) => {
+export const postSlackMessage = async ({ body, from, media, threadTs }) => {
   const threadProps = {};
-  const {
-    value: threadTs,
-    metadata: { lastSeen },
-  } = await LOSERS.getWithMetadata(from);
 
   if (threadTs) {
     threadProps.thread_ts = threadTs;
@@ -50,11 +46,5 @@ export const postSlackMessage = async ({ body, from, media }) => {
     blocks: toBlocks({ text: body, media }),
     username: `${from}${SUFFIX}`,
     ...threadProps,
-  }).then(async response => {
-    const { event } = response.body;
-    // event.threadTs vs event.thread_ts? seems wrong
-    if (!event.threadTs) {
-      await LOSERS.put(event.thread_ts, from);
-    }
   });
 };
