@@ -1,4 +1,3 @@
-account_id = "2d88losecd847f9997d7c5525f48bb286fd"
 compatibility_date = "2022-06-12"
 main = "index.js"
 node_compat = true
