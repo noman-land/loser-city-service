@@ -22,6 +22,7 @@ jobs:
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CF_API_TOKEN }}
           preCommands: npm install
           command: publish --env ${{ github.event.inputs.environment || 'qa' }} index.js
