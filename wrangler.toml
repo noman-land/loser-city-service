@@ -1,23 +1,28 @@
 compatibility_date = "2022-06-12"
-account_id = "2d88ecd847f9997d7c5525f48bb286fd"
-node_compat = true
 main = "index.js"
+node_compat = true
+workers_dev = false
 
 [env.qa]
-name = "loser-city-qa"
-route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
-kv_namespaces = [
-  { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
-]
+  name = "loser-city-qa"
+  route = { pattern = "https://api-qa.loser.city/fun/v1/*", zone_name = "loser.city" }
+  kv_namespaces = [
+    { binding = "LOSERS", id = "46cad69054684746945f36bc4facda58", preview_id = "4530309591d747348986201a4b810b74" }
+  ]
+  r2_buckets = [
+    { binding = "R2", bucket_name = "loser-city-qa", preview_bucket_name = "loser-city-local" }
+  ]
 [env.qa.vars]
-  SLACK_CHANNEL_ID = "C03F6AG3H7E"
+  SLACK_CHANNEL_ID = "C049G9TT1RP" #loser-city-testing
 
 [env.prod]
-name = "loser-city"
-route = { pattern = "https://api.loser.city/fun/v1/*", zone_name = "loser.city" }
-kv_namespaces = [
-  { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
-]
+  name = "loser-city"
+  route = { pattern = "https://api.loser.city/fun/v1/*", zone_name = "loser.city" }
+  kv_namespaces = [
+    { binding = "LOSERS", id = "c1031b790a834a18847809cebc30a498", preview_id = "4530309591d747348986201a4b810b74" }
+  ]
+  r2_buckets = [
+    { binding = "R2", bucket_name = "loser-city", preview_bucket_name = "loser-city-local" }
+  ]
 [env.prod.vars]
   SLACK_CHANNEL_ID = "C03E12DJK0F"
-
