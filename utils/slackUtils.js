@@ -1,5 +1,3 @@
-import { SUFFIX } from '../constants';
-
 const createMediaObject = ({ mediaType, url }, i) => {
   const [type] = mediaType.split('/');
   const defaultProps = {
