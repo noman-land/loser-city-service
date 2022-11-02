@@ -24,8 +24,6 @@ export const sendSms = async ({ body, mediaUrl, to }) => {
       }
     : {};
 
-  console.log('mediaUrl', mediaUrl);
-
   return twilioSms({
     Body: body,
     To: to,

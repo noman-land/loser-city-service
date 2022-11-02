@@ -13,7 +13,7 @@ workers_dev = false
     { binding = "R2", bucket_name = "loser-city-qa", preview_bucket_name = "loser-city-local" }
   ]
 [env.qa.vars]
-  SLACK_CHANNEL_ID = "C03F6AG3H7E"
+  SLACK_CHANNEL_ID = "C049G9TT1RP" #loser-city-testing
 
 [env.prod]
   name = "loser-city"
