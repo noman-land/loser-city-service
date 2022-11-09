@@ -26,4 +26,4 @@ jobs:
           preCommands: npm install
           command: publish --env ${{ github.event.inputs.environment || 'qa' }} index.js
         env:
-          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
