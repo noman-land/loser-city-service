@@ -25,5 +25,3 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           preCommands: npm install
           command: publish --env ${{ github.event.inputs.environment || 'qa' }} index.js
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
