@@ -4,7 +4,7 @@ const token = Buffer.from(
   `${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`
 ).toString('base64');
 
-const twilioSms = body =>
+const twilioSms = (body) =>
   fetch(TWILIO_URL, {
     body: new URLSearchParams({
       ...body,

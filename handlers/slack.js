@@ -2,40 +2,23 @@ const ALLOWED_SUBTYPES = ['file_share'];
 
 import { SUFFIX } from '../constants';
 import { sendSms } from '../api/twilioApi';
+// import { getPublicUrl, slackFetch } from '../api/slackApi';
 
-export const handleSlack = async req => {
+export const handleSlack = async (req) => {
   const {
     event: {
-      files: [{ url_private_download }] = [{}],
+      // files: [{ permalink_public }] = [{}],
       message = {},
       previous_message = {},
       subtype,
       text,
       thread_ts,
-      ...eventRest
     },
-    ...requestRest
   } = await req.json();
 
-  console.log({
-    ...requestRest,
-    event: {
-      message,
-      previous_message,
-      subtype,
-      text,
-      thread_ts,
-      ...eventRest,
-    },
-  });
+  // const [, , fileId] = permalink_public.split('-');
 
   const phoneNumber = await LOSERS.get(thread_ts);
-
-  // slackFetch({ contentType: `image/${fileType}`, url: url_private_download })
-  // .then(response =>
-  // console.log('response', Buffer.from(response).toString())
-  // )
-  // .catch(error => console.log(error.message))
 
   if (
     (!subtype || ALLOWED_SUBTYPES.includes(subtype)) &&
@@ -44,7 +27,7 @@ export const handleSlack = async req => {
   ) {
     return sendSms({
       body: text,
-      mediaUrl: url_private_download,
+      // mediaUrl: permalink_public,
       to: phoneNumber,
     });
   }
@@ -76,7 +59,7 @@ export const handleSlack = async req => {
   return new Response({ status: 204 });
 };
 
-export const handleSlackChallenge = async req => {
+export const handleSlackChallenge = async (req) => {
   const { challenge } = await req.json();
   return new Response(challenge);
 };
