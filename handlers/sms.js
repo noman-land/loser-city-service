@@ -8,11 +8,11 @@ export const handleSms = async (req, env) => {
   const threadTs = await getThreadTs(from, env);
 
   if (!threadTs) {
-    return postSlackMessage({ body, from, media }, env).then(
-      async (response) => {
-        const {
-          message: { ts },
-        } = await response.json();
+    return postSlackMessage({ body, from, media }, env).then(async (resp) => {
+      const [response, responseCopy] = resp.tee();
+      const {
+        message: { ts },
+      } = await responseCopy.json();
 
       await createThread({ phoneNumber: from, threadTs: ts }, env);
       return response;
