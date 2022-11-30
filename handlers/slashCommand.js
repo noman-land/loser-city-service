@@ -1,5 +1,3 @@
-const ALLOWED_SUBTYPES = ['file_share'];
-
 import { openModal } from '../api/slackApi';
 import { getModalPayload } from '../utils/slackUtils';
 

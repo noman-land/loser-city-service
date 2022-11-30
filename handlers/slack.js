@@ -3,7 +3,12 @@ const ALLOWED_SUBTYPES = ['file_share'];
 import { SUFFIX } from '../constants';
 import { sendSms } from '../api/twilioApi';
 import { postSlackMessage } from '../api/slackApi';
-import { createThread, deleteThread, getPhoneNumber } from '../utils/sqlUtils';
+import {
+  createThread,
+  deleteThread,
+  getPhoneNumber,
+  getThreadTs,
+} from '../utils/sqlUtils';
 
 const handleSlackMessage = async (
   {
@@ -79,18 +84,32 @@ const handleSlackModalSubmission = async ({ type, view }, env) => {
       env
     );
 
+    const threadTs = await getThreadTs(phoneNumber, env);
+
+    const maybeThread = {};
+    let messageBody = `*Outgoing:* ${body}`;
+
+    if (threadTs) {
+      maybeThread.threadTs = threadTs;
+      messageBody = `*Submitted through modal:* ${body}`;
+    }
+
     const response = await postSlackMessage(
       {
-        body,
+        body: messageBody,
         from: phoneNumber,
+        ...maybeThread,
       },
       env
     );
-    const {
-      message: { ts },
-    } = await response.json();
 
-    await createThread({ phoneNumber, threadTs: ts }, env);
+    if (!threadTs) {
+      const {
+        message: { ts },
+      } = await response.json();
+
+      await createThread({ phoneNumber, threadTs: ts }, env);
+    }
 
     return new Response(null, { status: 200 });
   }
