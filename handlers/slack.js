@@ -54,10 +54,10 @@ const handleSlackMessage = async (
 
     await deleteThread(phoneNumber, env);
 
-    return new Response({ status: 200 });
+    return new Response(null, { status: 200 });
   }
 
-  return new Response({ status: 204 });
+  return new Response(null, { status: 204 });
 };
 
 const handleSlackModalSubmission = async ({ type, view }, env) => {
@@ -92,10 +92,10 @@ const handleSlackModalSubmission = async ({ type, view }, env) => {
 
     await createThread({ phoneNumber, threadTs: ts }, env);
 
-    return new Response({ status: 200 });
+    return new Response(null, { status: 200 });
   }
 
-  return new Response({ status: 204 });
+  return new Response(null, { status: 204 });
 };
 
 export const handleSlack = async (req, env) => {
@@ -112,7 +112,7 @@ export const handleSlack = async (req, env) => {
     return handleSlackMessage(event, env);
   }
 
-  return new Response({ status: 204 });
+  return new Response(null, { status: 204 });
 };
 
 export const handleSlackChallenge = async (req) => {

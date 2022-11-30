@@ -17,8 +17,8 @@ export const handleSlashCommand = async (req, env) => {
       env
     );
 
-    return new Response({ status: 200 });
+    return new Response(null, { status: 200 });
   } catch (error) {
-    return new Response({ status: 400, error });
+    return new Response(error.message, { status: error.status || 500 });
   }
 };
