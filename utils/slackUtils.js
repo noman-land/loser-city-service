@@ -1,5 +1,3 @@
-import { SUFFIX } from '../constants';
-
 export const getModalPayload = (phoneNumber = '', message = '') => ({
   type: 'modal',
   title: {
