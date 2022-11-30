@@ -7,8 +7,3 @@ CREATE TABLE losers (
   blocked BOOLEAN DEFAULT false,
   PRIMARY KEY (`phoneNumber`)
 );
-
-INSERT INTO
-  losers (phoneNumber, threadTs)
-VALUES
-  ('+13012334339', '1669104665.406909')
