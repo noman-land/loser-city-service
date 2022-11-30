@@ -16,9 +16,7 @@ const handleSlackMessage = async (
   },
   env
 ) => {
-  // const phoneNumber = await env.LOSERS.get(thread_ts);
   const phoneNumber = await getPhoneNumber(thread_ts, env);
-  console.log(phoneNumber);
 
   // const [, , fileId] = permalink_public.split('-');
 
@@ -52,14 +50,9 @@ const handleSlackMessage = async (
 
   // If parent thread is being deleted
   if (isBotMessage && (isThreadDeleted || isNonThreadDeleted)) {
-    // const phoneNumber = await env.LOSERS.get(previous_message.ts);
     const phoneNumber = await getPhoneNumber(previous_message.ts, env);
 
     await deleteThread(phoneNumber, env);
-    // await Promise.all([
-    //   env.LOSERS.delete(phoneNumber),
-    //   env.LOSERS.delete(previous_message.ts),
-    // ]);
 
     return new Response({ status: 200 });
   }
@@ -98,8 +91,6 @@ const handleSlackModalSubmission = async ({ type, view }, env) => {
     } = await response.json();
 
     await createThread({ phoneNumber, threadTs: ts }, env);
-    // await env.LOSERS.put(phoneNumber, ts);
-    // await env.LOSERS.put(ts, phoneNumber);
 
     return new Response({ status: 200 });
   }
