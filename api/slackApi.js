@@ -1,40 +1,45 @@
 import { SUFFIX } from '../constants';
 import { toBlocks } from '../utils/slackUtils';
 
-const FIVE_MINUTES_IN_MS = 1000 * 60 * 5;
-
-export const slackFetch = async ({
-  body,
-  contentType = 'application/json; charset=utf-8',
-  method = 'GET',
-  url,
-}) =>
+export const slackFetch = async (
+  {
+    body,
+    contentType = 'application/json; charset=utf-8',
+    method = 'GET',
+    url,
+  },
+  env
+) =>
   fetch(url, {
     body,
     headers: {
-      authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+      authorization: `Bearer ${env.SLACK_BOT_TOKEN}`,
       'content-type': contentType,
     },
     method,
   });
 
-const slackPost = async (url, body = {}) =>
-  slackFetch({
-    url,
-    body: JSON.stringify({
-      channel: SLACK_CHANNEL_ID,
-      link_names: false,
-      unfurl_links: false,
-      ...body,
-    }),
-    headers: {
-      authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-      'content-type': 'application/json; charset=utf-8',
+export const slackPost = async (url, body = {}, env) =>
+  slackFetch(
+    {
+      body: JSON.stringify(body),
+      method: 'POST',
+      url,
     },
-    method: 'POST',
-  });
+    env
+  );
 
-export const postSlackMessage = async ({ body, from, media, threadTs }) => {
+export const openModal = async ({ modal, trigger_id }, env) =>
+  slackPost(
+    'https://slack.com/api/views.open',
+    { trigger_id, view: modal },
+    env
+  );
+
+export const postSlackMessage = async (
+  { body, from, media, threadTs },
+  env
+) => {
   const threadProps = {};
 
   if (threadTs) {
@@ -42,9 +47,16 @@ export const postSlackMessage = async ({ body, from, media, threadTs }) => {
     threadProps.reply_broadcast = true;
   }
 
-  return slackPost('https://slack.com/api/chat.postMessage', {
-    blocks: toBlocks({ text: body, media }),
-    username: `${from}${SUFFIX}`,
-    ...threadProps,
-  });
+  return slackPost(
+    'https://slack.com/api/chat.postMessage',
+    {
+      blocks: toBlocks({ text: body, media }),
+      channel: env.SLACK_CHANNEL_ID,
+      link_names: false,
+      unfurl_links: false,
+      username: `${from}${SUFFIX}`,
+      ...threadProps,
+    },
+    env
+  );
 };

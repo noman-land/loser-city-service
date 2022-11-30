@@ -2,6 +2,9 @@ compatibility_date = "2022-06-12"
 main = "index.js"
 node_compat = true
 workers_dev = false
+d1_databases = [
+  { binding = "D1", database_name = "loser-city-local", database_id = "27d6040b-3abe-4228-8876-b8e2fae0731d" }
+]
 
 [env.qa]
   name = "loser-city-qa"
@@ -11,6 +14,9 @@ workers_dev = false
   ]
   r2_buckets = [
     { binding = "R2", bucket_name = "loser-city-qa", preview_bucket_name = "loser-city-local" }
+  ]
+  d1_databases = [
+    { binding = "D1", database_name = "loser-city-qa", database_id = "26b8b724-70ae-4600-a2f0-448184f1ca87" }
   ]
 [env.qa.vars]
   SLACK_CHANNEL_ID = "C049G9TT1RP" #loser-city-testing
@@ -23,6 +29,9 @@ workers_dev = false
   ]
   r2_buckets = [
     { binding = "R2", bucket_name = "loser-city", preview_bucket_name = "loser-city-local" }
+  ]
+  d1_databases = [
+    { binding = "D1", database_name = "loser-city", database_id = "1a53b0b8-0e17-4f1a-af03-41c18e780d12" }
   ]
 [env.prod.vars]
   SLACK_CHANNEL_ID = "C03E12DJK0F"

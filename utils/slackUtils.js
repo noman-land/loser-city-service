@@ -1,6 +1,6 @@
 import { SUFFIX } from '../constants';
 
-const textALoserModalPayload = {
+export const getModalPayload = (phoneNumber = '', message = '') => ({
   type: 'modal',
   title: {
     type: 'plain_text',
@@ -19,10 +19,12 @@ const textALoserModalPayload = {
   },
   blocks: [
     {
+      block_id: 'phoneNumber',
       type: 'input',
       element: {
         type: 'plain_text_input',
-        action_id: 'phone-number-action',
+        action_id: 'phoneNumberAction',
+        initial_value: phoneNumber,
       },
       label: {
         type: 'plain_text',
@@ -35,11 +37,13 @@ const textALoserModalPayload = {
       },
     },
     {
+      block_id: 'message',
       type: 'input',
       element: {
         type: 'plain_text_input',
         multiline: true,
-        action_id: 'message-action',
+        action_id: 'messageAction',
+        initial_value: message,
       },
       label: {
         type: 'plain_text',
@@ -48,7 +52,7 @@ const textALoserModalPayload = {
       },
     },
   ],
-};
+});
 
 const createMediaObject = ({ mediaType, url }, i) => {
   const [type] = mediaType.split('/');
@@ -97,6 +101,28 @@ export const toBlocks = ({ media, text }) => {
       text: {
         type: 'mrkdwn',
         text,
+      },
+      accessory: {
+        type: 'overflow',
+        options: [
+          {
+            text: {
+              type: 'plain_text',
+              text: 'Rename loser',
+              emoji: true,
+            },
+            value: 'rename',
+          },
+          {
+            text: {
+              type: 'plain_text',
+              text: 'Delete thread',
+              emoji: true,
+            },
+            value: 'delete',
+          },
+        ],
+        action_id: 'thread-action',
       },
     },
     ...mediaObjects,

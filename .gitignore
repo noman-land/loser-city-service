@@ -4,3 +4,4 @@ worker/
 package-lock.json
 dist/
 .DS_*
+.wrangler

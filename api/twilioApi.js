@@ -1,32 +1,37 @@
-const TWILIO_URL = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
+const getTwilioUrl = (TWILIO_ACCOUNT_SID) =>
+  `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
 
-const token = Buffer.from(
-  `${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`
-).toString('base64');
+const getToken = (env) =>
+  Buffer.from(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`).toString(
+    'base64'
+  );
 
-const twilioSms = (body) =>
-  fetch(TWILIO_URL, {
+const twilioSms = (body, env) =>
+  fetch(getTwilioUrl(env.TWILIO_ACCOUNT_SID), {
     body: new URLSearchParams({
       ...body,
-      MessagingServiceSid: TWILIO_MESSAGING_SERVICE_SID,
+      MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID,
     }).toString(),
     headers: {
-      authorization: `Basic ${token}`,
+      authorization: `Basic ${getToken(env)}`,
       'content-type': 'application/x-www-form-urlencoded', // ; charset=utf-8
     },
     method: 'POST',
   });
 
-export const sendSms = async ({ body, mediaUrl, to }) => {
+export const sendSms = async ({ body, mediaUrl, to }, env) => {
   const maybeParams = mediaUrl
     ? {
         MediaUrl: encodeURIComponent(mediaUrl),
       }
     : {};
 
-  return twilioSms({
-    Body: body,
-    To: to,
-    ...maybeParams,
-  });
+  return twilioSms(
+    {
+      Body: body,
+      To: to,
+      ...maybeParams,
+    },
+    env
+  );
 };
