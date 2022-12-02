@@ -1,4 +1,4 @@
-export const getModalPayload = (phoneNumber = '', message = '') => ({
+export const makeModalPayload = (phoneNumber = '', message = '') => ({
   type: 'modal',
   title: {
     type: 'plain_text',
@@ -88,10 +88,37 @@ const createMediaObject = ({ mediaType, url }, i) => {
   return null;
 };
 
-export const toBlocks = ({ media, text }) => {
+const overflowMenu = {
+  accessory: {
+    type: 'overflow',
+    options: [
+      {
+        text: {
+          type: 'plain_text',
+          text: ':pencil: Rename loser',
+          emoji: true,
+        },
+        value: 'rename',
+      },
+      {
+        text: {
+          type: 'plain_text',
+          text: ':no_entry_sign: Block loser',
+          emoji: true,
+        },
+        value: 'block',
+      },
+    ],
+    action_id: 'thread-action',
+  },
+};
+
+export const makeMessageSections = ({ isThread, media, text }) => {
   const mediaObjects = media
     ? media.map(createMediaObject).filter((n) => n)
     : [];
+
+  const overflow = isThread ? {} : overflowMenu;
 
   return [
     {
@@ -100,28 +127,7 @@ export const toBlocks = ({ media, text }) => {
         type: 'mrkdwn',
         text,
       },
-      accessory: {
-        type: 'overflow',
-        options: [
-          {
-            text: {
-              type: 'plain_text',
-              text: 'Rename loser',
-              emoji: true,
-            },
-            value: 'rename',
-          },
-          {
-            text: {
-              type: 'plain_text',
-              text: 'Delete thread',
-              emoji: true,
-            },
-            value: 'delete',
-          },
-        ],
-        action_id: 'thread-action',
-      },
+      ...overflow,
     },
     ...mediaObjects,
   ];

@@ -57,7 +57,9 @@ const handleSlackMessage = async (
   if (isBotMessage && (isThreadDeleted || isNonThreadDeleted)) {
     const phoneNumber = await getPhoneNumber(previous_message.ts, env);
 
-    await deleteThread(phoneNumber, env);
+    if (phoneNumber) {
+      await deleteThread(phoneNumber, env);
+    }
 
     return new Response(null, { status: 200 });
   }
@@ -87,17 +89,17 @@ const handleSlackModalSubmission = async ({ type, view }, env) => {
     const threadTs = await getThreadTs(phoneNumber, env);
 
     const maybeThread = {};
-    let messageBody = `*Outgoing:* ${body}`;
+    let text = `*Outgoing:* ${body}`;
 
     if (threadTs) {
       maybeThread.threadTs = threadTs;
-      messageBody = `*Submitted through modal:* ${body}`;
+      text = `*Submitted through modal:* ${body}`;
     }
 
     const response = await postSlackMessage(
       {
-        body: messageBody,
-        from: phoneNumber,
+        phoneNumber,
+        text,
         ...maybeThread,
       },
       env

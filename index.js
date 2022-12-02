@@ -14,7 +14,8 @@ router
   .get('/sms', () => new Response('SMS OK'))
   .post('/slack', handleSlack)
   .post('/slash-command', handleSlashCommand)
-  .post('/sms', handleSms);
+  .post('/sms', handleSms)
+  .catch(console.error);
 
 export default {
   fetch: router.handle,

@@ -1,5 +1,5 @@
 import { openModal } from '../api/slackApi';
-import { getModalPayload } from '../utils/slackUtils';
+import { makeModalPayload } from '../utils/slackUtils';
 
 export const handleSlashCommand = async (req, env) => {
   const formData = await req.formData();
@@ -10,7 +10,7 @@ export const handleSlashCommand = async (req, env) => {
     await openModal(
       {
         trigger_id: form.trigger_id,
-        modal: getModalPayload(words.shift(), words.join(' ')),
+        modal: makeModalPayload(words.shift(), words.join(' ')),
       },
       env
     );

@@ -6,10 +6,10 @@ const getToken = (env) =>
     'base64'
   );
 
-const twilioSms = (body, env) =>
+const twilioSms = (messageParams, env) =>
   fetch(getTwilioUrl(env.TWILIO_ACCOUNT_SID), {
     body: new URLSearchParams({
-      ...body,
+      ...messageParams,
       MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID,
     }).toString(),
     headers: {

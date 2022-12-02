@@ -1,5 +1,5 @@
 import { SUFFIX } from '../constants';
-import { toBlocks } from '../utils/slackUtils';
+import { makeMessageSections } from '../utils/slackUtils';
 
 export const slackFetch = async (
   {
@@ -37,7 +37,7 @@ export const openModal = async ({ modal, trigger_id }, env) =>
   );
 
 export const postSlackMessage = async (
-  { body, from, media, threadTs },
+  { media, phoneNumber, text, threadTs },
   env
 ) => {
   const threadProps = {};
@@ -50,11 +50,11 @@ export const postSlackMessage = async (
   return slackPost(
     'https://slack.com/api/chat.postMessage',
     {
-      blocks: toBlocks({ text: body, media }),
+      blocks: makeMessageSections({ isThread: !!threadTs, media, text }),
       channel: env.SLACK_CHANNEL_ID,
       link_names: false,
       unfurl_links: false,
-      username: `${from}${SUFFIX}`,
+      username: `${phoneNumber}${SUFFIX}`,
       ...threadProps,
     },
     env
