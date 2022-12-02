@@ -1,14 +1,14 @@
-const ALLOWED_SUBTYPES = ['file_share'];
-
-import { SUFFIX } from '../constants';
-import { sendSms } from '../api/twilioApi';
 import { postSlackMessage } from '../api/slackApi';
+import { sendSms } from '../api/twilioApi';
+import { SUFFIX } from '../constants';
 import {
-  createThread,
   deleteThread,
   getPhoneNumber,
   getThreadTs,
+  saveThread,
 } from '../utils/sqlUtils';
+
+const ALLOWED_SUBTYPES = ['file_share'];
 
 const handleSlackMessage = async (
   {
@@ -22,7 +22,6 @@ const handleSlackMessage = async (
   env
 ) => {
   const phoneNumber = await getPhoneNumber(thread_ts, env);
-
   // const [, , fileId] = permalink_public.split('-');
 
   // If it's a Slack thread reply
@@ -59,13 +58,22 @@ const handleSlackMessage = async (
 
     if (phoneNumber) {
       await deleteThread(phoneNumber, env);
+      return new Response(null, { status: 200 });
     }
-
-    return new Response(null, { status: 200 });
   }
 
   return new Response(null, { status: 204 });
 };
+
+const getMessageParams = ({ body, threadTs }) =>
+  threadTs
+    ? {
+        threadTs,
+        text: `*Submitted through modal:* ${body}`,
+      }
+    : {
+        text: `*Outgoing:* ${body}`,
+      };
 
 const handleSlackModalSubmission = async ({ type, view }, env) => {
   if (type === 'view_submission') {
@@ -88,19 +96,10 @@ const handleSlackModalSubmission = async ({ type, view }, env) => {
 
     const threadTs = await getThreadTs(phoneNumber, env);
 
-    const maybeThread = {};
-    let text = `*Outgoing:* ${body}`;
-
-    if (threadTs) {
-      maybeThread.threadTs = threadTs;
-      text = `*Submitted through modal:* ${body}`;
-    }
-
     const response = await postSlackMessage(
       {
         phoneNumber,
-        text,
-        ...maybeThread,
+        ...getMessageParams({ body, threadTs }),
       },
       env
     );
@@ -110,7 +109,7 @@ const handleSlackModalSubmission = async ({ type, view }, env) => {
         message: { ts },
       } = await response.json();
 
-      await createThread({ phoneNumber, threadTs: ts }, env);
+      await saveThread({ phoneNumber, threadTs: ts }, env);
     }
 
     return new Response(null, { status: 200 });

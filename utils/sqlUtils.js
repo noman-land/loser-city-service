@@ -18,7 +18,7 @@ export const getPhoneNumber = async (threadTs, env) => {
   return phoneNumber;
 };
 
-export const createThread = async ({ phoneNumber, threadTs }, env) => {
+export const saveThread = async ({ phoneNumber, threadTs }, env) => {
   const { results } = await env.D1.prepare(
     'INSERT INTO losers (phoneNumber, threadTs) VALUES (?, ?)'
   )

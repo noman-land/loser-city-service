@@ -17,6 +17,8 @@ export const handleSlashCommand = async (req, env) => {
 
     return new Response(null, { status: 200 });
   } catch (error) {
-    return new Response(error.message, { status: error.status || 500 });
+    return new Response(error.message || 'Unexpected error opening modal', {
+      status: error.status || 500,
+    });
   }
 };
