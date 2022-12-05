@@ -1,21 +1,13 @@
-export const getThreadTs = async (phoneNumber, env) => {
+export const getLoser = async (threadTsOrPhoneNumber, env) => {
   const {
-    results: [{ threadTs } = {}],
-  } = await env.D1.prepare('SELECT threadTs FROM losers WHERE phoneNumber = ?')
-    .bind(phoneNumber)
+    results: [result = {}],
+  } = await env.D1.prepare(
+    'SELECT * FROM losers WHERE threadTs = ? OR phoneNumber = ?'
+  )
+    .bind(threadTsOrPhoneNumber, threadTsOrPhoneNumber)
     .all();
 
-  return threadTs;
-};
-
-export const getPhoneNumber = async (threadTs, env) => {
-  const {
-    results: [{ phoneNumber } = {}],
-  } = await env.D1.prepare('SELECT phoneNumber FROM losers WHERE threadTs = ?')
-    .bind(threadTs)
-    .all();
-
-  return phoneNumber;
+  return result;
 };
 
 export const saveThread = async ({ phoneNumber, threadTs }, env) => {
@@ -53,6 +45,16 @@ export const setThreadTs = async ({ phoneNumber, threadTs }, env) => {
     'UPDATE losers SET threadTs = ? WHERE phoneNumber = ?'
   )
     .bind(threadTs, phoneNumber)
+    .all();
+
+  return results;
+};
+
+export const setBlocked = async (phoneNumber, env) => {
+  const { results } = await env.D1.prepare(
+    'UPDATE losers SET blocked = true WHERE phoneNumber = ?'
+  )
+    .bind(phoneNumber)
     .all();
 
   return results;

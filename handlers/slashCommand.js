@@ -1,16 +1,16 @@
 import { openModal } from '../api/slackApi';
-import { makeModalPayload } from '../utils/slackUtils';
+import { makeSendMessageModalPayload } from '../utils/slackUtils';
 
 export const handleSlashCommand = async (req, env) => {
   const formData = await req.formData();
-  const form = Object.fromEntries(formData.entries());
-  const words = form.text.split(' ');
+  const { text, trigger_id } = Object.fromEntries(formData.entries());
+  const words = text.split(' ');
 
   try {
     await openModal(
       {
-        trigger_id: form.trigger_id,
-        modal: makeModalPayload(words.shift(), words.join(' ')),
+        trigger_id,
+        modal: makeSendMessageModalPayload(words.shift(), words.join(' ')),
       },
       env
     );

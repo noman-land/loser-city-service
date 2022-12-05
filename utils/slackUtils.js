@@ -1,5 +1,9 @@
-export const makeModalPayload = (phoneNumber = '', message = '') => ({
+export const makeSendMessageModalPayload = (
+  phoneNumber = '',
+  message = ''
+) => ({
   type: 'modal',
+  callback_id: 'send-message-modal',
   title: {
     type: 'plain_text',
     text: 'Text a loser',
@@ -47,6 +51,75 @@ export const makeModalPayload = (phoneNumber = '', message = '') => ({
         type: 'plain_text',
         text: 'Message',
         emoji: true,
+      },
+    },
+  ],
+});
+
+export const makeRenameModalPayload = ({ name, phoneNumber }) => ({
+  type: 'modal',
+  callback_id: 'rename-modal',
+  private_metadata: phoneNumber,
+  title: {
+    type: 'plain_text',
+    text: `Rename ${name || phoneNumber}`,
+    emoji: true,
+  },
+  submit: {
+    type: 'plain_text',
+    text: 'Rename',
+    emoji: true,
+  },
+  close: {
+    type: 'plain_text',
+    text: 'Cancel',
+    emoji: true,
+  },
+  blocks: [
+    {
+      block_id: 'name',
+      type: 'input',
+      element: {
+        type: 'plain_text_input',
+        action_id: 'nameAction',
+        initial_value: name || phoneNumber,
+      },
+      label: {
+        type: 'plain_text',
+        text: 'Choose a new name',
+        emoji: true,
+      },
+    },
+  ],
+});
+
+export const makeBlockModalPayload = ({ name, phoneNumber }) => ({
+  type: 'modal',
+  callback_id: 'block-modal',
+  private_metadata: phoneNumber,
+  title: {
+    type: 'plain_text',
+    text: `Block ${name || phoneNumber}`,
+    emoji: true,
+  },
+  submit: {
+    type: 'plain_text',
+    text: 'Block',
+    emoji: true,
+  },
+  close: {
+    type: 'plain_text',
+    text: 'Cancel',
+    emoji: true,
+  },
+  blocks: [
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `Are you sure you'd like to block *${name || phoneNumber}${
+          name ? ` (${phoneNumber})` : ''
+        }* from sending texts to loser.city?`,
       },
     },
   ],

@@ -37,7 +37,7 @@ export const openModal = async ({ modal, trigger_id }, env) =>
   );
 
 export const postSlackMessage = async (
-  { media, phoneNumber, text, threadTs },
+  { media, name, text, threadTs },
   env
 ) => {
   const threadProps = {};
@@ -54,7 +54,7 @@ export const postSlackMessage = async (
       channel: env.SLACK_CHANNEL_ID,
       link_names: false,
       unfurl_links: false,
-      username: `${phoneNumber}${SUFFIX}`,
+      username: `${name}${SUFFIX}`,
       ...threadProps,
     },
     env
