@@ -19,7 +19,7 @@ export const parseSms = (str) => {
 
   return {
     media,
-    phoneNumber: decodeURIComponent(From),
+    from: decodeURIComponent(From),
     text: decodeURIComponent(Body).split('+').join(' '),
   };
 };

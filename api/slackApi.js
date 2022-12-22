@@ -1,16 +1,12 @@
 import { SUFFIX } from '../constants';
 import { makeMessageSections } from '../utils/slackUtils';
 
-export const slackFetch = async (
-  {
-    body,
-    contentType = 'application/json; charset=utf-8',
-    method = 'GET',
-    url,
-  },
+export const slackApi = async (
+  url,
+  { body, contentType = 'application/json; charset=utf-8', method = 'GET' },
   env
 ) =>
-  fetch(url, {
+  fetch(`https://slack.com/api/${url}`, {
     body,
     headers: {
       authorization: `Bearer ${env.SLACK_BOT_TOKEN}`,
@@ -20,21 +16,17 @@ export const slackFetch = async (
   });
 
 export const slackPost = async (url, body = {}, env) =>
-  slackFetch(
+  slackApi(
+    url,
     {
       body: JSON.stringify(body),
       method: 'POST',
-      url,
     },
     env
   );
 
 export const openModal = async ({ modal, trigger_id }, env) =>
-  slackPost(
-    'https://slack.com/api/views.open',
-    { trigger_id, view: modal },
-    env
-  );
+  slackPost('views.open', { trigger_id, view: modal }, env);
 
 export const postSlackMessage = async (
   { media, name, text, threadTs },
@@ -48,7 +40,7 @@ export const postSlackMessage = async (
   }
 
   return slackPost(
-    'https://slack.com/api/chat.postMessage',
+    'chat.postMessage',
     {
       blocks: makeMessageSections({ isThread: !!threadTs, media, text }),
       channel: env.SLACK_CHANNEL_ID,
@@ -60,3 +52,17 @@ export const postSlackMessage = async (
     env
   );
 };
+
+export const updateSlackMessage = async ({ name, threadTs }, env) =>
+  slackPost(
+    'chat.update',
+    {
+      as_user: true,
+      // blocks: [
+      //   { type: 'section', text: { type: 'plain_text', text: 'Hello world' } },
+      // ],
+      channel: env.SLACK_CHANNEL_ID,
+      ts: threadTs,
+    },
+    env
+  );

@@ -1,31 +1,34 @@
-import { openModal, postSlackMessage } from '../api/slackApi';
+import {
+  openModal,
+  postSlackMessage,
+  updateSlackMessage,
+} from '../api/slackApi';
 import { sendSms } from '../api/twilioApi';
 import { SUFFIX } from '../constants';
-import {
-  makeBlockModalPayload,
-  makeRenameModalPayload,
-} from '../utils/slackUtils';
+import { makeModalPayload } from '../utils/slackUtils';
 import {
   deleteThread,
   getLoser,
-  saveThread,
+  insertThread,
   setBlocked,
   setName,
+  setThreadTs,
 } from '../utils/sqlUtils';
 
 const ALLOWED_SUBTYPES = ['file_share'];
 
-const handleSlackMessage = async (
-  {
-    // files: [{ permalink_public }] = [{}],
-    message = {},
-    previous_message = {},
-    subtype,
-    text,
-    thread_ts,
-  },
-  env
-) => {
+const handleSlackJson = async (req, env) => {
+  const {
+    event: {
+      // files: [{ permalink_public }] = [{}],
+      message = {},
+      previous_message = {},
+      subtype,
+      text,
+      thread_ts,
+    },
+  } = await req.json();
+
   const { phoneNumber } = await getLoser(thread_ts, env);
   // const [, , fileId] = permalink_public.split('-');
 
@@ -70,124 +73,140 @@ const handleSlackMessage = async (
   return new Response(null, { status: 204 });
 };
 
-const getMessageParams = ({ body, threadTs }) =>
-  threadTs
-    ? {
-        threadTs,
-        text: `*Submitted through modal:* ${body}`,
-      }
-    : {
-        text: `*Outgoing:* ${body}`,
-      };
-
 const handleSlackDropdownAction = async (
-  { actions, message, trigger_id },
+  { actions: [action], message, trigger_id },
   env
 ) => {
-  const { thread_ts } = message;
+  const { ts: threadTs } = message;
   const {
-    selected_option: { value },
-  } = actions[0];
+    selected_option: { value: modalType },
+  } = action;
 
-  const { name, phoneNumber } = await getLoser(thread_ts, env);
-
-  let modal;
-
-  if (value === 'rename') {
-    modal = makeRenameModalPayload({ name, phoneNumber });
-  }
-
-  if (value === 'block') {
-    modal = makeBlockModalPayload({ name, phoneNumber });
-  }
+  const modal = await makeModalPayload({ modalType, threadTs }, env);
 
   await openModal({ modal, trigger_id }, env);
 
   return new Response(null, { status: 200 });
 };
 
-const handleSlackModalSubmission = async (payload, env) => {
-  const { callback_id, state } = payload.view;
+const handleSendMessageModal = async ({ state }, env) => {
+  const {
+    message: {
+      messageAction: { value: body },
+    },
+    phoneNumber: {
+      phoneNumberAction: { value: phoneNumber },
+    },
+  } = state.values;
+
+  await sendSms(
+    {
+      body,
+      to: phoneNumber,
+    },
+    env
+  );
+
+  const {
+    name,
+    phoneNumber: knownLoser,
+    threadTs: existingThread,
+  } = await getLoser(phoneNumber, env);
+
+  const messageParams = existingThread
+    ? {
+        threadTs: existingThread,
+        text: `*Submitted through modal:* ${body}`,
+      }
+    : {
+        text: `*Outgoing:* ${body}`,
+      };
+
+  const response = await postSlackMessage(
+    {
+      name: name || phoneNumber,
+      ...messageParams,
+    },
+    env
+  );
+
+  if (!existingThread) {
+    const {
+      message: { ts: newThreadTs },
+    } = await response.json();
+
+    const dbAction = knownLoser ? setThreadTs : insertThread;
+    await dbAction({ phoneNumber, threadTs: newThreadTs }, env);
+  }
+
+  return new Response(null, { status: 200 });
+};
+
+const handleRenameModal = async (
+  { private_metadata: phoneNumber, state },
+  env
+) => {
+  const {
+    name: {
+      nameAction: { value: name },
+    },
+  } = state.values;
+
+  const { threadTs } = await setName({ name, phoneNumber }, env);
+  // await renameSlackThread({ name, threadTs }, env);
+  return new Response(null, { status: 200 });
+};
+
+const handleBlockModal = async ({ private_metadata: phoneNumber }, env) => {
+  await setBlocked(phoneNumber, env);
+  // await updateSlackThreadToBlocked({ phoneNumber }, env);
+  return new Response(null, { status: 200 });
+};
+
+const handleSlackModalSubmission = async ({ view }, env) => {
+  const { callback_id } = view;
 
   if (callback_id === 'send-message-modal') {
-    const {
-      message: {
-        messageAction: { value: body },
-      },
-      phoneNumber: {
-        phoneNumberAction: { value: phoneNumber },
-      },
-    } = state.values;
-
-    await sendSms(
-      {
-        body,
-        to: phoneNumber,
-      },
-      env
-    );
-
-    const { name, threadTs } = await getLoser(phoneNumber, env);
-
-    const response = await postSlackMessage(
-      {
-        name: name || phoneNumber,
-        ...getMessageParams({ body, threadTs }),
-      },
-      env
-    );
-
-    if (!threadTs) {
-      const {
-        message: { ts },
-      } = await response.json();
-
-      await saveThread({ phoneNumber, threadTs: ts }, env);
-    }
-
-    return new Response(null, { status: 200 });
+    return handleSendMessageModal(view, env);
   }
 
   if (callback_id === 'rename-modal') {
-    const { private_metadata: phoneNumber } = payload.view;
-    const {
-      name: {
-        nameAction: { value: name },
-      },
-    } = state.values;
-
-    await setName({ name, phoneNumber }, env);
-    return new Response(null, { status: 200 });
+    return handleRenameModal(view, env);
   }
 
   if (callback_id === 'block-modal') {
-    const { private_metadata: phoneNumber } = payload.view;
-    await setBlocked(phoneNumber, env);
-    return new Response(null, { status: 200 });
+    return handleBlockModal(view, env);
   }
+
+  return new Response(`Unknown modal callback_id "${callback_id}", ignoring.`, {
+    status: 404,
+  });
+};
+
+const handleSlackForm = async (req) => {
+  const formData = await req.formData();
+  const payload = JSON.parse(Object.fromEntries(formData.entries()).payload);
+
+  if (payload.type === 'view_submission') {
+    return handleSlackModalSubmission(payload, env);
+  }
+
+  if (payload.type === 'block_actions') {
+    return handleSlackDropdownAction(payload, env);
+  }
+
+  return new Response(null, { status: 204 });
 };
 
 export const handleSlack = async (req, env) => {
   const contentType = req.headers.get('Content-type');
 
   if (contentType === 'application/x-www-form-urlencoded') {
-    const formData = await req.formData();
-    const payload = JSON.parse(Object.fromEntries(formData.entries()).payload);
-
-    if (payload.type === 'view_submission') {
-      return handleSlackModalSubmission(payload, env);
-    }
-
-    if (payload.type === 'block_actions') {
-      return handleSlackDropdownAction(payload, env);
-    }
-
-    return new Response(null, { status: 204 });
+    return handleSlackForm(req);
   }
 
   if (contentType === 'application/json') {
-    const { event } = await req.json();
-    return handleSlackMessage(event, env);
+    return handleSlackJson(req, env);
   }
 
   return new Response(null, { status: 204 });

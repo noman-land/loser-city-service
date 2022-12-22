@@ -15,7 +15,12 @@ router
   .post('/slack', handleSlack)
   .post('/slash-command', handleSlashCommand)
   .post('/sms', handleSms)
-  .catch(console.error);
+  .catch((error) => {
+    console.error(error);
+    return new Response(error.message || 'Catch inside router has caught!', {
+      status: error.status || 404,
+    });
+  });
 
 export default {
   fetch: router.handle,

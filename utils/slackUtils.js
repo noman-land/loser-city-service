@@ -1,3 +1,5 @@
+import { getLoser } from './sqlUtils';
+
 export const makeSendMessageModalPayload = (
   phoneNumber = '',
   message = ''
@@ -56,7 +58,7 @@ export const makeSendMessageModalPayload = (
   ],
 });
 
-export const makeRenameModalPayload = ({ name, phoneNumber }) => ({
+const makeRenameModalPayload = ({ name, phoneNumber }) => ({
   type: 'modal',
   callback_id: 'rename-modal',
   private_metadata: phoneNumber,
@@ -93,7 +95,7 @@ export const makeRenameModalPayload = ({ name, phoneNumber }) => ({
   ],
 });
 
-export const makeBlockModalPayload = ({ name, phoneNumber }) => ({
+const makeBlockModalPayload = ({ name, phoneNumber }) => ({
   type: 'modal',
   callback_id: 'block-modal',
   private_metadata: phoneNumber,
@@ -124,6 +126,20 @@ export const makeBlockModalPayload = ({ name, phoneNumber }) => ({
     },
   ],
 });
+
+export const makeModalPayload = async ({ modalType, threadTs }, env) => {
+  const { name, phoneNumber } = await getLoser(threadTs, env);
+
+  if (modalType === 'rename') {
+    return makeRenameModalPayload({ name, phoneNumber });
+  }
+
+  if (modalType === 'block') {
+    return makeBlockModalPayload({ name, phoneNumber });
+  }
+
+  return null;
+};
 
 const createMediaObject = ({ mediaType, url }, i) => {
   const [type] = mediaType.split('/');
